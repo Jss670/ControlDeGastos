@@ -37,7 +37,8 @@ namespace ControlDeGastos
                         break;
                     case 3: MostrarMovimientos(collection);
                         break;
-                   
+                    case 4: ObtenerSaldo(collection, saldoInicial);
+                        break;
                         
 
 
@@ -67,7 +68,8 @@ namespace ControlDeGastos
             RegistrarGasto.Importe = double.Parse (Console.ReadLine());
 
             Console.WriteLine("Ingrese Fecha (dd/mm/aaaa)");
-            RegistrarGasto.Fecha =DateTime.Parse (Console.ReadLine());
+            RegistrarGasto.Fecha = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
 
             collection.InsertOne(RegistrarGasto);
         }
@@ -84,6 +86,27 @@ namespace ControlDeGastos
                 Console.WriteLine(" Importe: " + gasto.Importe + " Descripcion:  " + gasto.Descripcion+ " Fecha: "+ gasto.Fecha.ToShortTimeString());
             }
             
+        }
+
+        static void ObtenerSaldo(IMongoCollection<Gasto> collection, double saldoInicial)
+        {
+            Console.WriteLine(" El Saldo en tu cuenta es $ ");
+            var filter = Builders<Gasto>.Filter.Empty;
+            List<Gasto> gastos = collection.Find(filter).ToList();
+            double GastoTotal = 0;
+
+
+            foreach ( var gasto in gastos)
+            {
+                GastoTotal = GastoTotal + gasto.Importe;
+
+
+            }
+
+            Console.WriteLine(saldoInicial - GastoTotal);
+
+
+
         }
 
     }
