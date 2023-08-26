@@ -35,7 +35,8 @@ namespace ControlDeGastos
                     case 2:
                         RegistrarPago(collection);
                         break;
-                    
+                    case 3: MostrarMovimientos(collection);
+                        break;
                    
                         
 
@@ -69,6 +70,20 @@ namespace ControlDeGastos
             RegistrarGasto.Fecha =DateTime.Parse (Console.ReadLine());
 
             collection.InsertOne(RegistrarGasto);
+        }
+
+        static void MostrarMovimientos(IMongoCollection<Gasto> collection)
+        {
+            Console.WriteLine("Los Movimientos Guardados son: ");
+
+            var filter = Builders<Gasto>.Filter.Empty;
+            List<Gasto> gastos = collection.Find(filter).ToList();
+
+            foreach (var gasto in gastos)
+            {
+                Console.WriteLine(" Importe: " + gasto.Importe + " Descripcion:  " + gasto.Descripcion+ " Fecha: "+ gasto.Fecha.ToShortTimeString());
+            }
+            
         }
 
     }
